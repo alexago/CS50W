@@ -1,0 +1,22 @@
+
+{% extends "layout.html"%}
+
+{% block heading %}Register{% endblock%}
+{% block body %}
+<h4>Please fill the form</h4>
+
+{% if error != None or error != "" %}
+<h5 style="color:red;">{{error}}</h5>
+{% endif %}
+<p>
+	{% if isLoggedIn %}
+		<a href="{{ url_for('logout')}}">Logout</a>
+	{% else %}
+	<form action="{{ url_for('register')}}" method="post">
+		<input type="text" name="name" placeholder="Enter Your name"><br>
+		<input type="password" name="password" placeholder="Enter Your password"><br>
+		<button>Register</button>
+	</form>
+	{%endif%}
+</p>
+{% endblock%}

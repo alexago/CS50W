@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>{% block title%}{% endblock %}Book Review</title>
+</head>
+<body>
+<a href="{{url_for('index')}}">Home</a>
+<h1 style="color:red;">{% block heading%}{% endblock %}</h1>
+	{% block body%}
+	{% endblock %}
+</body>
+</html>
