@@ -3,10 +3,13 @@
 
 {% block heading %}{{book.title}}{% endblock%}
 {% block body %}
+{% if error != "" and error != None %}
+<h5 style="color:red;">Error: {{error}}</h5>
+{% endif %}
 	{% if book == None %}
 	<h4>Book doesn't exists</h4>
 	{% else %}
-	
+
 	<table border="0">
 		<tr><td>ID</td><td>{{book.id}}</td></tr>
 		<tr><td>Title</td><td>{{book.title}}</td></tr>
@@ -16,7 +19,33 @@
 	</table>
 	
 	<div>
-	<h4>Reviews</h4>
+	<form action="{{ url_for('addReview', id=book.id) }}" method="post">
+		<textarea name="review" placeholder="review"></textarea>
+		<div>
+			<input type="radio" id="one" name="rating" value="1">
+			<label for="one">1</label>
+			<input type="radio" id="two" name="rating" value="2">
+			<label for="one">2</label>
+			<input type="radio" id="three" name="rating" value="3">
+			<label for="one">3</label>
+			<input type="radio" id="four" name="rating" value="4">
+			<label for="one">4</label>
+			<input type="radio" id="five" name="rating" value="5">
+			<label for="one">5</label>
+		</div>
+		<button>Register</button>
+	</form>
+	
+	<h4>User Reviews</h4>
+	{% if reviews == None %}
+	<h4>No user reviews</h4>
+	{% else %}
+		<ul>
+		{% for review in reviews %}
+			<li>{{review.review}} <br>Rating: {{review.rating}} by {{review.username}}</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
 	</div>
 	
 	{% endif %}

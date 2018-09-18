@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import render_template, request, redirect, url_for
 import hashlib
+import requests
 import re
 
 
@@ -30,9 +31,25 @@ def addUserToDB(username, password):
 	db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username":username, "password":password})
 	db.commit()
 
+def isUserReviewExists(user_id, book_id):
+	query = "SELECT COUNT(*) FROM reviews WHERE user_id=:user_id AND book_id=:book_id"
+	reviewsCount = db.execute(query,{"user_id":user_id,"book_id":book_id}).fetchone()
+	return reviewsCount[0] > 0
+	
+def addReviewToDB(review, rating, user_id, book_id):
+	query = "INSERT INTO reviews (user_id, book_id, review, rating) VALUES (:user_id, :book_id, :review, :rating)"
+	db.execute(query, {"user_id":user_id, "book_id":book_id, "review":review, "rating":rating})
+	
+	print(f"Add review to DB: review {review}, rating {rating}, {user_id}, {book_id}")
+	db.commit()
+	
 def getUser(username, password):
     query = "SELECT id, username, password FROM users WHERE username=:user AND password=:password"
     return db.execute(query,{"user":username,"password":password}).fetchone()
+	
+def getUserId(username):
+    query = "SELECT id FROM users WHERE username=:user"
+    return db.execute(query,{"user":username}).fetchone()[0]
 
 def findBook(searchTerm):
 	query = "SELECT * FROM books WHERE isbn LIKE :searchTerm OR title LIKE :searchTerm OR author LIKE :searchTerm"
@@ -41,6 +58,10 @@ def findBook(searchTerm):
 def getBookById(id):
 	query = "SELECT * FROM books WHERE id=:id"
 	return db.execute(query,{"id":id}).fetchone()
+
+def getBookReviews(book_id):
+	query = "SELECT u.username, r.review, r.rating FROM reviews AS r, users AS u WHERE book_id=:book_id AND r.user_id = u.id"
+	return db.execute(query,{"book_id":book_id}).fetchall()
 	
 def isUserLoggedIn():
 	return 'user_name' in session.keys()
@@ -74,6 +95,7 @@ def login():
 		return render_template("index.html", error=error)
 	else:
 		session['user_name'] = name
+		session['user_id'] = getUserId(name) 
 	return redirect(url_for('index'))
 
 @app.route("/register",methods=["GET","POST"])
@@ -99,6 +121,7 @@ def register():
 		addUserToDB(name, password)
 		
 		session['user_name'] = name
+		session['user_id'] = getUserId(name)
 		return redirect(url_for('index'))
 
 
@@ -117,6 +140,24 @@ def find():
 @app.route("/book/<int:id>")
 def book(id):
 	book = getBookById(id)
-	return render_template("book_details.html", book=book)
+	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
+	entry = res.json()['books'][0]
+	reviews = getBookReviews(id)
+	error=session['book_review_add_error']
+	session['book_review_add_error'] = ''
+	return render_template("book_details.html", book=book, enrty=entry, reviews=reviews, error=error)
 	
+@app.route("/book/<int:id>/addreview",methods=["POST"])
+def addReview(id):
+	review = request.form.get("review")
+	rating = request.form.get("rating")
+	session['book_review_add_error'] = ''
+	if isUserReviewExists(session['user_id'], id):
+		error="User can't add more then one review for same book"
+		session['book_review_add_error'] = error
+		return redirect(url_for('book', id=id))
+		
+	addReviewToDB(review, rating, session['user_id'], id)
+	return redirect(url_for('book', id=id))
+
 	
