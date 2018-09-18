@@ -1,0 +1,23 @@
+
+{% extends "layout.html"%}
+
+{% block heading %}{{book.title}}{% endblock%}
+{% block body %}
+	{% if book == None %}
+	<h4>Book doesn't exists</h4>
+	{% else %}
+	
+	<table border="0">
+		<tr><td>ID</td><td>{{book.id}}</td></tr>
+		<tr><td>Title</td><td>{{book.title}}</td></tr>
+		<tr><td>Author</td><td>{{book.author}}</td></tr>
+		<tr><td>Year</td><td>{{book.year}}</td></tr>
+		<tr><td>ISBN</td><td>{{book.isbn}}</td></tr>
+	</table>
+	
+	<div>
+	<h4>Reviews</h4>
+	</div>
+	
+	{% endif %}
+{% endblock%}

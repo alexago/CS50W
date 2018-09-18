@@ -3,10 +3,12 @@
 
 {% block heading %}Book review{% endblock%}
 {% block body %}
-	<br>
-Hello {{name}}
 <p>
-	{% if isLoggedIn %}
+	{% if 'user_name' in session.keys() %}
+		<form action="{{ url_for('find')}}" method="post">
+		<input type="text" name="term" placeholder="Enter ISBN, tile or author name">
+		<button>Search</button>
+	</form>
 		<a href="{{ url_for('logout')}}">Logout</a>
 	{% else %}
 	{% if error != None or error != "" %}

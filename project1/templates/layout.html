@@ -3,9 +3,14 @@
 <head><title>{% block title%}{% endblock %}Book Review</title>
 </head>
 <body>
-<a href="{{url_for('index')}}">Home</a>
+<div style="width:800px;margin:auto;border:1px solid black;padding:10px;">
+<div><a href="{{url_for('index')}}">Home</a></div>
+{% if 'user_name' in session.keys() %}
+<div style="float:right;">Hello {{session['user_name']}}! <a href="{{ url_for('logout')}}">Logout</a></div>
+{% endif %}
 <h1 style="color:red;">{% block heading%}{% endblock %}</h1>
 	{% block body%}
 	{% endblock %}
+</div>
 </body>
 </html>

@@ -34,6 +34,14 @@ def getUser(username, password):
     query = "SELECT id, username, password FROM users WHERE username=:user AND password=:password"
     return db.execute(query,{"user":username,"password":password}).fetchone()
 
+def findBook(searchTerm):
+	query = "SELECT * FROM books WHERE isbn LIKE :searchTerm OR title LIKE :searchTerm OR author LIKE :searchTerm"
+	return db.execute(query,{"searchTerm":f"%{searchTerm}%"}).fetchall()
+
+def getBookById(id):
+	query = "SELECT * FROM books WHERE id=:id"
+	return db.execute(query,{"id":id}).fetchone()
+	
 def isUserLoggedIn():
 	return 'user_name' in session.keys()
 	
@@ -44,12 +52,7 @@ def encodePassword(password):
 	
 @app.route("/")
 def index():
-	name = 'Guest'
-	loggedIn = False
-	if isUserLoggedIn():
-		name = session['user_name']
-		loggedIn = True
-	return render_template("index.html", name=name, isLoggedIn=loggedIn)
+	return render_template("index.html")
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -103,3 +106,17 @@ def register():
 def logout():
 	session.clear()
 	return redirect(url_for('index'))
+
+	
+@app.route("/search",methods=["POST"])
+def find():
+	searchTerm = request.form.get("term")
+	books = findBook(searchTerm)
+	return render_template("searchresults.html", books=books)
+
+@app.route("/book/<int:id>")
+def book(id):
+	book = getBookById(id)
+	return render_template("book_details.html", book=book)
+	
+	
