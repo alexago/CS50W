@@ -8,6 +8,6 @@ To use application instance/config.py must be created
 In this file following variables need to be defined:
 
 
-DATABASE_URL="URI to database"
+**DATABASE_URL**="URI to database"
 
-SALT="salt string for password encoding"
+**SALT**="salt string for password encoding"
