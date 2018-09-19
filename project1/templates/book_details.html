@@ -10,6 +10,8 @@
 	<h4>Book doesn't exists</h4>
 	{% else %}
 
+	<div>
+	<div>
 	<table border="0">
 		<tr><td>ID</td><td>{{book.id}}</td></tr>
 		<tr><td>Title</td><td>{{book.title}}</td></tr>
@@ -17,6 +19,7 @@
 		<tr><td>Year</td><td>{{book.year}}</td></tr>
 		<tr><td>ISBN</td><td>{{book.isbn}}</td></tr>
 	</table>
+	</div>
 	
 	<div>
 	<form action="{{ url_for('addReview', id=book.id) }}" method="post">
@@ -33,9 +36,21 @@
 			<input type="radio" id="five" name="rating" value="5">
 			<label for="one">5</label>
 		</div>
-		<button>Register</button>
+		<button>Add Reivew</button>
 	</form>
+	</div>
 	
+	{% if entry != None %}
+	<div>
+	<h4>Book rating on Goodreads</h4>
+	<p>
+	Ratings count: {{entry.work_ratings_count}} Average rating: {{entry.average_rating}}/5
+	</p>
+	</div>
+	{% endif %}
+	
+	
+	<div>
 	<h4>User Reviews</h4>
 	{% if reviews == None %}
 	<h4>No user reviews</h4>
@@ -46,6 +61,7 @@
 		{% endfor %}
 		</ul>
 	{% endif %}
+	</div>
 	</div>
 	
 	{% endif %}

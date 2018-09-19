@@ -8,7 +8,7 @@ from flask import render_template, request, redirect, url_for
 import hashlib
 import requests
 import re
-
+import json
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config')
@@ -59,6 +59,10 @@ def getBookById(id):
 	query = "SELECT * FROM books WHERE id=:id"
 	return db.execute(query,{"id":id}).fetchone()
 
+def getBookByISBN(isbn):
+	query = "SELECT * FROM books WHERE isbn=:isbn"
+	return db.execute(query,{"isbn":isbn}).fetchone()
+	
 def getBookReviews(book_id):
 	query = "SELECT u.username, r.review, r.rating FROM reviews AS r, users AS u WHERE book_id=:book_id AND r.user_id = u.id"
 	return db.execute(query,{"book_id":book_id}).fetchall()
@@ -145,7 +149,7 @@ def book(id):
 	reviews = getBookReviews(id)
 	error=session['book_review_add_error']
 	session['book_review_add_error'] = ''
-	return render_template("book_details.html", book=book, enrty=entry, reviews=reviews, error=error)
+	return render_template("book_details.html", book=book, entry=entry, reviews=reviews, error=error)
 	
 @app.route("/book/<int:id>/addreview",methods=["POST"])
 def addReview(id):
@@ -160,4 +164,18 @@ def addReview(id):
 	addReviewToDB(review, rating, session['user_id'], id)
 	return redirect(url_for('book', id=id))
 
+@app.route("/api/<isbn>")
+def bookAPI(isbn):
+	book = getBookByISBN(isbn)
+	if book == None:
+		return 'Error 404 : Page not found'
+
+	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
+	entry = res.json()['books'][0]
+	book = dict(book)
+	
+	if entry != None:
+		book["review_count"] = entry["work_ratings_count"]
+		book["average_score"] = entry["average_rating"]
+	return json.dumps(book)
 	
