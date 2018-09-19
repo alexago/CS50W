@@ -2,10 +2,8 @@
 {% extends "layout.html"%}
 
 {% block heading %}{{book.title}}{% endblock%}
+{% block error%}{{error}}{% endblock %}
 {% block body %}
-{% if error != "" and error != None %}
-<h5 style="color:red;">Error: {{error}}</h5>
-{% endif %}
 	{% if book == None %}
 	<h4>Book doesn't exists</h4>
 	{% else %}
@@ -33,7 +31,7 @@
 			<label for="one">3</label>
 			<input type="radio" id="four" name="rating" value="4">
 			<label for="one">4</label>
-			<input type="radio" id="five" name="rating" value="5">
+			<input type="radio" id="five" name="rating" value="5" checked>
 			<label for="one">5</label>
 		</div>
 		<button>Add Reivew</button>

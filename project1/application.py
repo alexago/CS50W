@@ -77,7 +77,7 @@ def encodePassword(password):
 	
 @app.route("/")
 def index():
-	return render_template("index.html")
+	return render_template("index.html", error=None)
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -105,7 +105,7 @@ def login():
 @app.route("/register",methods=["GET","POST"])
 def register():
 	if request.method == "GET":
-		return render_template("register.html")
+		return render_template("register.html", error=None)
 	else:
 		name = request.form.get("name")
 		password = request.form.get("password")
@@ -139,7 +139,7 @@ def logout():
 def find():
 	searchTerm = request.form.get("term")
 	books = findBook(searchTerm)
-	return render_template("searchresults.html", books=books)
+	return render_template("searchresults.html", books=books, error=None)
 
 @app.route("/book/<int:id>")
 def book(id):

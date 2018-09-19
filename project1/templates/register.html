@@ -2,12 +2,9 @@
 {% extends "layout.html"%}
 
 {% block heading %}Register{% endblock%}
+{% block error%}{{error}}{% endblock %}
 {% block body %}
 <h4>Please fill the form</h4>
-
-{% if error != None or error != "" %}
-<h5 style="color:red;">{{error}}</h5>
-{% endif %}
 <p>
 	{% if isLoggedIn %}
 		<a href="{{ url_for('logout')}}">Logout</a>

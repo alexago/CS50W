@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head><title>{% block title%}{% endblock %}Book Review</title>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+<title>{% block title%}{% endblock %}Book Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<div style="width:800px;margin:auto;border:1px solid black;padding:10px;">
+<div class="main">
 <div><a href="{{url_for('index')}}">Home</a></div>
 {% if 'user_name' in session.keys() %}
 <div style="float:right;">Hello {{session['user_name']}}! <a href="{{ url_for('logout')}}">Logout</a></div>
 {% endif %}
 <h1 style="color:red;">{% block heading%}{% endblock %}</h1>
+	{% if error != None %}
+	<div class="alert alert-danger">Error: {{error}}</div>
+	{% endif %}
 	{% block body%}
 	{% endblock %}
 </div>
