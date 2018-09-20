@@ -1,20 +1,19 @@
 
 {% extends "layout.html"%}
 
-{% block heading %}Book review{% endblock%}
+{% block heading %}Welcome to Book review site!{% endblock%}
 {% block body %}
 <p>
 	{% if 'user_name' in session.keys() %}
 		<form action="{{ url_for('find')}}" method="post">
-		<input type="text" name="term" placeholder="Enter ISBN, tile or author name">
-		<button>Search</button>
+		<input type="text" name="term" class="rouded" placeholder="Enter ISBN, tile or author name">
+		<button class="btn btn-primary">Search</button>
 	</form>
-		<a href="{{ url_for('logout')}}">Logout</a>
 	{% else %}
 	<form action="{{ url_for('login')}}" method="post">
 		<input type="text" name="name" placeholder="Enter Your name">
 		<input type="password" name="password" placeholder="Enter Your password">
-		<button>Login</button>
+		<button class="btn btn-primary">Login</button>
 	</form>
 	<a href="{{ url_for('register')}}">Register</a>
 	{%endif%}

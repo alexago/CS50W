@@ -9,46 +9,63 @@
 	{% else %}
 
 	<div>
-	<div>
-	<table border="0">
-		<tr><td>ID</td><td>{{book.id}}</td></tr>
-		<tr><td>Title</td><td>{{book.title}}</td></tr>
-		<tr><td>Author</td><td>{{book.author}}</td></tr>
-		<tr><td>Year</td><td>{{book.year}}</td></tr>
-		<tr><td>ISBN</td><td>{{book.isbn}}</td></tr>
-	</table>
-	</div>
-	
-	<div>
-	<form action="{{ url_for('addReview', id=book.id) }}" method="post">
-		<textarea name="review" placeholder="review"></textarea>
-		<div>
-			<input type="radio" id="one" name="rating" value="1">
-			<label for="one">1</label>
-			<input type="radio" id="two" name="rating" value="2">
-			<label for="one">2</label>
-			<input type="radio" id="three" name="rating" value="3">
-			<label for="one">3</label>
-			<input type="radio" id="four" name="rating" value="4">
-			<label for="one">4</label>
-			<input type="radio" id="five" name="rating" value="5" checked>
-			<label for="one">5</label>
+	<div class="row p-2" style="background-color:#efefef">
+		<div class="col-6">
+		<table>
+			<tr><td class="font-weight-bold">ID</td><td>{{book.id}}</td></tr>
+			<tr><td class="font-weight-bold">Title</td><td>{{book.title}}</td></tr>
+			<tr><td class="font-weight-bold">Author</td><td>{{book.author}}</td></tr>
+			<tr><td class="font-weight-bold">Year</td><td>{{book.year}}</td></tr>
+			<tr><td class="font-weight-bold">ISBN</td><td>{{book.isbn}}</td></tr>
+		</table>
+		{% if entry != None %}
+		<div class="mt-2">
+		<h5>Book rating on Goodreads</h5>
+		<p>
+		Ratings count: {{entry.work_ratings_count}} Average rating: {{entry.average_rating}}/5
+		</p>
 		</div>
-		<button>Add Reivew</button>
-	</form>
+		{% endif %}
+		</div>
+		<div class="col-6">
+			<div>
+				<form action="{{ url_for('addReview', id=book.id) }}" method="post">
+					<textarea class="form-control" name="review" rows="5" placeholder="Type Your review here"></textarea>
+					<div class="form-check-inline">
+					<strong>Rate the book:</strong>
+					</div>
+					<div class="form-check-inline">
+						<label for="one" class="form-check-label">
+						<input type="radio" class="form-check-input" id="one" name="rating" value="1">
+						1</label>
+					</div>
+					<div class="form-check-inline">
+						<label for="one" class="form-check-label">
+						<input type="radio" class="form-check-input" id="two" name="rating" value="2">
+						2</label>
+					</div>
+					<div class="form-check-inline">
+						<label for="one" class="form-check-label">
+						<input type="radio" class="form-check-input" id="three" name="rating" value="3">
+						3</label>
+					</div>
+					<div class="form-check-inline">
+						<label for="one" class="form-check-label">
+						<input type="radio" class="form-check-input" id="four" name="rating" value="4">
+						4</label>
+					</div>
+					<div class="form-check-inline">
+						<label for="one" class="form-check-label">
+						<input type="radio" class="form-check-input" id="five" name="rating" value="5" checked>
+						5</label>
+					</div>
+					<button class="btn btn-primary">Add Reivew</button>
+				</form>
+			</div>
+		</div>
 	</div>
 	
-	{% if entry != None %}
-	<div>
-	<h4>Book rating on Goodreads</h4>
-	<p>
-	Ratings count: {{entry.work_ratings_count}} Average rating: {{entry.average_rating}}/5
-	</p>
-	</div>
-	{% endif %}
-	
-	
-	<div>
+	<div  class="mt-5">
 	<h4>User Reviews</h4>
 	{% if reviews == None %}
 	<h4>No user reviews</h4>

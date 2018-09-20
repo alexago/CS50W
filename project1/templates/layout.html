@@ -7,12 +7,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+
 <div class="main">
-<div><a href="{{url_for('index')}}">Home</a></div>
+<div class="header" >
+<div class="logo text-center font-weight-bold align-middle">BR</div>
+<div class="title font-weight-bold">Book review</div>
+</div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('index')}}">Home</a>
+    </li>
+  </ul>
+</nav>
 {% if 'user_name' in session.keys() %}
 <div style="float:right;">Hello {{session['user_name']}}! <a href="{{ url_for('logout')}}">Logout</a></div>
 {% endif %}
-<h1 style="color:red;">{% block heading%}{% endblock %}</h1>
+<div class="page_title">
+<h3>{% block heading%}{% endblock %}</h3>
+</div>
 	{% if error != None %}
 	<div class="alert alert-danger">Error: {{error}}</div>
 	{% endif %}

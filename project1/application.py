@@ -147,15 +147,16 @@ def book(id):
 	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
 	entry = res.json()['books'][0]
 	reviews = getBookReviews(id)
-	error=session['book_review_add_error']
-	session['book_review_add_error'] = ''
+	error=None
+	if 'book_review_add_error' in session.keys():
+		error=session['book_review_add_error']
+		session.pop('book_review_add_error',None)
 	return render_template("book_details.html", book=book, entry=entry, reviews=reviews, error=error)
 	
 @app.route("/book/<int:id>/addreview",methods=["POST"])
 def addReview(id):
 	review = request.form.get("review")
 	rating = request.form.get("rating")
-	session['book_review_add_error'] = ''
 	if isUserReviewExists(session['user_id'], id):
 		error="User can't add more then one review for same book"
 		session['book_review_add_error'] = error
