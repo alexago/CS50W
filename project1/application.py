@@ -165,11 +165,15 @@ def addReview(id):
 	addReviewToDB(review, rating, session['user_id'], id)
 	return redirect(url_for('book', id=id))
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404	
+	
 @app.route("/api/<isbn>")
 def bookAPI(isbn):
 	book = getBookByISBN(isbn)
 	if book == None:
-		return 'Error 404 : Page not found'
+		return abort(404)
 
 	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
 	entry = res.json()['books'][0]
