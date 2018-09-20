@@ -30,6 +30,3 @@ CREATE TABLE "public"."users" (
     "username" text NOT NULL,
     "password" text NOT NULL
 ) WITH (oids = false);
-
-
--- 2018-09-20 12:36:03.423104+00
