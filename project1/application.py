@@ -144,7 +144,7 @@ def find():
 @app.route("/book/<int:id>")
 def book(id):
 	book = getBookById(id)
-	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
+	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": app.config['GOODREADS_KEY'], "isbns": book.isbn})
 	entry = res.json()['books'][0]
 	reviews = getBookReviews(id)
 	error=None
@@ -175,7 +175,7 @@ def bookAPI(isbn):
 	if book == None:
 		return abort(404)
 
-	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ppryg3rPGop3RmhJ3cWdg", "isbns": book.isbn})
+	res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": app.config['GOODREADS_KEY'], "isbns": book.isbn})
 	entry = res.json()['books'][0]
 	book = dict(book)
 	
