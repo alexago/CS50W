@@ -12,6 +12,8 @@ In this file following variables need to be defined:
 
 **SALT**="salt string for password encoding"
 
+**GOODREADS_KEY**="goodread.com API key"
+
 ### Create DB tables
 To create tables used by the project execute following:
 
